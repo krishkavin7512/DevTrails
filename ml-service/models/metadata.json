@@ -1,0 +1,93 @@
+{
+  "trained_at": "2026-03-20T11:36:02.046217Z",
+  "python": "3.13.0",
+  "models": {
+    "premium": {
+      "r2_test": 0.9852,
+      "r2_cv_mean": 0.9856,
+      "rmse_test": 1.9682,
+      "feature_names": [
+        "city",
+        "platform",
+        "preferred_shift",
+        "vehicle_type",
+        "season",
+        "zone_risk_level",
+        "avg_weekly_earnings",
+        "avg_daily_hours",
+        "experience_months",
+        "historical_claims_count",
+        "historical_disruption_freq",
+        "aqi_avg_30d",
+        "rainfall_avg_30d",
+        "temperature_avg_30d"
+      ]
+    },
+    "risk": {
+      "accuracy_test": 1.0,
+      "accuracy_cv_mean": 0.9995,
+      "classes": [
+        "High",
+        "Low",
+        "Medium",
+        "VeryHigh"
+      ],
+      "feature_names": [
+        "city",
+        "platform",
+        "preferred_shift",
+        "vehicle_type",
+        "season",
+        "zone_risk_level",
+        "avg_weekly_earnings",
+        "avg_daily_hours",
+        "experience_months",
+        "historical_claims_count",
+        "historical_disruption_freq",
+        "aqi_avg_30d",
+        "rainfall_avg_30d",
+        "temperature_avg_30d",
+        "risk_score"
+      ]
+    },
+    "fraud": {
+      "f1_fraud": 1.0,
+      "recall_fraud": 1.0,
+      "accuracy": 1.0,
+      "threshold": 0.35,
+      "feature_names": [
+        "claim_amount",
+        "rider_experience_months",
+        "claims_last_30_days",
+        "claims_last_7_days",
+        "distance_from_zone_km",
+        "time_since_last_claim_hours",
+        "trigger_weather_match",
+        "other_riders_same_zone_claimed",
+        "claim_hour",
+        "day_of_week",
+        "policy_age_days"
+      ]
+    },
+    "disruption": {
+      "accuracy_test": 0.825,
+      "accuracy_cv_mean": 0.8365,
+      "classes": [
+        "Extreme",
+        "Moderate",
+        "Severe"
+      ],
+      "feature_names": [
+        "city",
+        "season",
+        "disruption_type",
+        "month",
+        "day_of_week",
+        "rainfall_mm",
+        "temperature_c",
+        "aqi",
+        "wind_speed_ms"
+      ]
+    }
+  }
+}

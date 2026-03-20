@@ -1,0 +1,19 @@
+{
+  "name": "raincheck",
+  "version": "1.0.0",
+  "description": "RainCheck — AI-Powered Parametric Insurance for Food Delivery Partners",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:ml\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "dev:ml": "cd ml-service && python app.py",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "build": "cd client && npm run build && cd ../server && npm run build"
+  },
+  "keywords": ["raincheck", "parametric-insurance", "hackathon"],
+  "author": "CEIL",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
