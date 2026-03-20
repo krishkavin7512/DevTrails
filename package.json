@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "RainCheck — AI-Powered Parametric Insurance for Food Delivery Partners",
   "scripts": {
+    "postinstall": "cd client && npm install && cd ../server && npm install",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:ml\"",
     "dev:client": "cd client && npm run dev",
     "dev:server": "cd server && npm run dev",
-    "dev:ml": "cd ml-service && python app.py",
+    "dev:ml": "cd ml-service && python -u app.py",
     "install:all": "npm install && cd client && npm install && cd ../server && npm install",
     "build": "cd client && npm run build && cd ../server && npm run build"
   },

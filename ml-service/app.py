@@ -2,10 +2,16 @@
 RainCheck ML Microservice — Flask API
 Serves premium pricing, risk assessment, fraud detection, and disruption prediction.
 """
+import sys
+import io
 import json
 import warnings
 from pathlib import Path
 from datetime import datetime, timedelta
+
+# Force UTF-8 output so Windows cp1252 terminals don't crash on unicode chars
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 warnings.filterwarnings('ignore')
 
@@ -56,14 +62,23 @@ def load_models():
     global _models, models_loaded
     try:
         import joblib
+        # Auto-train on first run if model files are missing
+        if not (MODEL_DIR / 'premium_model.pkl').exists():
+            print('[INFO] Model files not found — training now (this takes ~30s)...')
+            import subprocess, os
+            env = {**os.environ, 'PYTHONIOENCODING': 'utf-8'}
+            subprocess.run(
+                [sys.executable, str(ROOT / 'scripts' / 'train_models.py')],
+                check=True, env=env
+            )
         _models['premium']    = joblib.load(MODEL_DIR / 'premium_model.pkl')
         _models['risk']       = joblib.load(MODEL_DIR / 'risk_model.pkl')
         _models['fraud']      = joblib.load(MODEL_DIR / 'fraud_model.pkl')
         _models['disruption'] = joblib.load(MODEL_DIR / 'disruption_model.pkl')
         models_loaded = True
-        print('✅ All ML models loaded')
+        print('[OK] All ML models loaded')
     except Exception as e:
-        print(f'⚠️  Models not loaded (run scripts/train_models.py first): {e}')
+        print(f'[WARN] Models not loaded: {e}')
         models_loaded = False
 
 load_models()

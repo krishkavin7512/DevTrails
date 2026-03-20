@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
 """
-RainCheck — Model Training Script
+RainCheck - Model Training Script
 Trains all 4 ML models and saves them with metadata.
 Run from ml-service/ directory: python scripts/train_models.py
 """
 import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 import json
 import warnings
 import subprocess
