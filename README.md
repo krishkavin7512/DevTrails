@@ -1044,48 +1044,55 @@ gantt
     Final Pitch Deck                  :         p3e, 2026-04-09, 2d
 ```
 
-### Phase 1 — Ideation & Foundation ✅ *Complete*
+### Phase 1 — Ideation & Foundation *(done)*
 
-**Deliverables:**
-- [x] Problem research with verified statistics on India's gig economy
-- [x] 3 detailed user personas with real income data
-- [x] Full system architecture design
-- [x] MongoDB schemas for all 5 entities (Rider, Policy, Claim, DisruptionEvent, WeatherData)
-- [x] Express.js REST API — 8 route files, 30+ endpoints
-- [x] Next.js frontend — 6 pages, 16 UI components, 4 chart components, 4 custom hooks
-- [x] 4 trained ML models (Premium R²=0.985, Risk Acc=100%, Fraud F1=1.0, Disruption Acc=82.5%)
-- [x] OpenWeatherMap integration with realistic mock fallback
-- [x] Parametric trigger engine with automated claim initiation
-- [x] Fraud detection system (7-rule AI scoring)
-- [x] Demo simulation endpoints for hackathon presentation
-- [x] This README
+Phase 1 was about getting the core working — not a polished product, but something real enough to demo and reason about. We started with the problem, talked to riders in our network, and worked backwards from what they actually needed.
 
----
+What we shipped:
 
-### Phase 2 — Automation & Protection 🔄 *Next*
-
-**Deliverables:**
-- [ ] Complete Razorpay UPI payment integration
-- [ ] SMS notifications via Twilio (disruption alerts + payout confirmations)
-- [ ] Real-time WebSocket updates (live disruption ticker on triggers page)
-- [ ] Policy auto-renewal with payment retry logic
-- [ ] Rider mobile number OTP verification
-- [ ] Admin dispute resolution workflow
-- [ ] Performance benchmarks: trigger → payout < 2 minutes guaranteed
+- Researched India's gig economy, verified the income-loss numbers against IMD rainfall data and CPCB AQI records
+- Built out three rider personas grounded in real earnings and disruption patterns — not hypothetical users
+- Designed the full DB schema (Rider, Policy, Claim, DisruptionEvent, WeatherData) before writing a single route
+- Express REST API — 8 route files, 30+ endpoints, Zod validation throughout
+- Next.js frontend — 6 pages, 16 components, 4 chart components, 5 custom hooks
+- Trained 4 ML models: premium pricing (R² 0.985), risk profiling (100% accuracy), fraud detection (F1 1.0), disruption forecasting (82.5% accuracy)
+- Wired in OpenWeatherMap with a mock fallback so the UI never breaks without a live connection
+- Parametric trigger engine — threshold breach fires claims automatically across all affected policyholders
+- Fraud detection with 7 scoring rules, three outcome tiers
+- Simulate endpoint for demo: fires a full trigger→event→claims→payouts chain in one API call
+- This document
 
 ---
 
-### Phase 3 — Scale & Optimise 🔮 *Planned*
+### Phase 2 — Automation & Payments *(next up)*
 
-**Deliverables:**
-- [ ] Advanced ML fraud model with GPS coordinates
-- [ ] Open-Meteo historical data integration for backtesting
-- [ ] Platform API integration (Zomato/Swiggy rider verification)
-- [ ] Flutter mobile app prototype
-- [ ] Load testing: 10,000 concurrent claim initiations
-- [ ] Full hackathon demo video
-- [ ] Investor pitch deck
-- [ ] Unit test coverage ≥ 80%
+Phase 1 proved the concept. Phase 2 makes it real — actual money moving, actual notifications, actual coverage the moment a rider pays.
+
+What's coming:
+
+- Razorpay UPI integration — riders pay weekly premiums and receive payouts to their UPI ID
+- SMS + WhatsApp alerts via Twilio when a trigger fires in the rider's city and when their payout lands
+- WebSocket live feed on the triggers page so the disruption ticker updates without a page refresh
+- Policy auto-renewal — charge the weekly premium automatically, pause if payment fails
+- OTP verification on rider phone number at onboarding
+- Dispute resolution flow for the admin dashboard — insurer can request evidence, rider can respond in-app
+- End-to-end payout latency target: trigger detection to UPI credit under 2 minutes
+
+---
+
+### Phase 3 — Scale & Harden *(planned)*
+
+Phase 3 is about proving this can handle real load and survive adversarial conditions.
+
+What we're building toward:
+
+- Enhanced fraud model incorporating GPS trace analysis, cell tower cross-referencing, and delivery platform activity signals (the full anti-spoofing stack from the Market Crash scenario)
+- Backtesting the trigger thresholds against 3 years of Open-Meteo historical data to calibrate basis risk
+- Zomato/Swiggy platform API integration for rider identity and earnings verification
+- Flutter mobile app — push notifications, biometric auth, background location
+- Load testing at 10,000 concurrent claim initiations to validate the fan-out architecture
+- Investor pitch deck and actuarial model for Series A conversation
+- Unit test coverage to 80%+ across backend and ML service
 
 ---
 
