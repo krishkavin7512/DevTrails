@@ -1254,17 +1254,7 @@ python scripts/train_models.py  # Retrain all models
 
 ---
 
-## 👥 Team CEIL
 
-| Name | Role | Responsibilities |
-|------|------|-----------------|
-| **Kavin Krish Vijay** | Full-Stack Lead | Architecture, Next.js frontend, API integration |
-| **Ryan Fernandes** | Backend & ML | Express.js API, MongoDB schemas, ML pipeline |
-| **Prarthana P** | Frontend & UI/UX | Component design, Tailwind theming, UX flows |
-| **Tanay Krishnan** | ML & Data | Model training, data generation, feature engineering |
-| **Nikhil Ganesh** | Integration & DevOps | API wiring, deployment, testing, documentation |
-
----
 
 *Built with purpose, for the people who deliver with purpose.* 🛵
 
