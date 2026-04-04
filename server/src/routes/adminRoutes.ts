@@ -79,20 +79,47 @@ router.post('/seed', async (_req: Request, res: Response) => {
 
   // ── Seed Riders ─────────────────────────────────────────────────────────────
   const riderDefs = [
-    { fullName: 'Rahul Sharma',   phone: '9876543210', email: 'rahul@example.com', city: 'Mumbai',    platform: 'Swiggy',  vehicleType: 'motorcycle', preferredShift: 'evening', avgWeeklyEarnings: 550000, avgDailyHours: 8,  experienceMonths: 24, riskScore: 52, riskTier: 'Medium', zone: 'Andheri West',  pincode: '400053' },
-    { fullName: 'Priya Nair',     phone: '8765432109', email: 'priya@example.com',  city: 'Delhi',     platform: 'Zomato',  vehicleType: 'scooter',    preferredShift: 'morning', avgWeeklyEarnings: 480000, avgDailyHours: 7,  experienceMonths: 18, riskScore: 71, riskTier: 'High',   zone: 'Connaught Place', pincode: '110001' },
-    { fullName: 'Arjun Mehta',    phone: '7654321098', email: 'arjun@example.com',  city: 'Bangalore', platform: 'Both',    vehicleType: 'motorcycle', preferredShift: 'mixed',   avgWeeklyEarnings: 620000, avgDailyHours: 9,  experienceMonths: 36, riskScore: 31, riskTier: 'Low',    zone: 'Koramangala',     pincode: '560034' },
-    { fullName: 'Kavya Reddy',    phone: '6543210987', email: 'kavya@example.com',  city: 'Hyderabad', platform: 'Swiggy',  vehicleType: 'scooter',    preferredShift: 'evening', avgWeeklyEarnings: 510000, avgDailyHours: 8,  experienceMonths: 12, riskScore: 58, riskTier: 'Medium', zone: 'Banjara Hills',   pincode: '500034' },
-    { fullName: 'Rohit Das',      phone: '9988776655', email: 'rohit@example.com',  city: 'Kolkata',   platform: 'Zomato',  vehicleType: 'bicycle',    preferredShift: 'morning', avgWeeklyEarnings: 380000, avgDailyHours: 6,  experienceMonths: 6,  riskScore: 44, riskTier: 'Medium', zone: 'Salt Lake',       pincode: '700064' },
-    { fullName: 'Sneha Joshi',    phone: '8877665544', email: 'sneha@example.com',  city: 'Pune',      platform: 'Both',    vehicleType: 'motorcycle', preferredShift: 'afternoon', avgWeeklyEarnings: 520000, avgDailyHours: 8, experienceMonths: 20, riskScore: 39, riskTier: 'Low',   zone: 'Kothrud',         pincode: '411038' },
-    { fullName: 'Vikram Patel',   phone: '7766554433', email: 'vikram@example.com', city: 'Ahmedabad', platform: 'Swiggy',  vehicleType: 'motorcycle', preferredShift: 'evening', avgWeeklyEarnings: 490000, avgDailyHours: 9,  experienceMonths: 30, riskScore: 62, riskTier: 'High',   zone: 'Satellite',       pincode: '380015' },
-    { fullName: 'Meera Singh',    phone: '6655443322', email: 'meera@example.com',  city: 'Jaipur',    platform: 'Zomato',  vehicleType: 'scooter',    preferredShift: 'morning', avgWeeklyEarnings: 460000, avgDailyHours: 7,  experienceMonths: 15, riskScore: 65, riskTier: 'High',   zone: 'Malviya Nagar',   pincode: '302017' },
-    { fullName: 'Aditya Kumar',   phone: '9911223344', email: 'aditya@example.com', city: 'Chennai',   platform: 'Both',    vehicleType: 'motorcycle', preferredShift: 'mixed',   avgWeeklyEarnings: 540000, avgDailyHours: 9,  experienceMonths: 28, riskScore: 47, riskTier: 'Medium', zone: 'Anna Nagar',      pincode: '600040' },
-    { fullName: 'Sunita Verma',   phone: '8822334455', email: 'sunita@example.com', city: 'Lucknow',   platform: 'Swiggy',  vehicleType: 'scooter',    preferredShift: 'evening', avgWeeklyEarnings: 420000, avgDailyHours: 7,  experienceMonths: 10, riskScore: 68, riskTier: 'High',   zone: 'Hazratganj',      pincode: '226001' },
+    { fullName: 'Rahul Sharma',   phone: '9876543210', email: 'rahul@example.com', city: 'Mumbai',    platform: 'Swiggy',  vehicleType: 'Motorcycle', preferredShift: 'Evening',   avgWeeklyEarnings: 550000, avgDailyHours: 8,  experienceMonths: 24, riskScore: 52, riskTier: 'Medium', zone: 'Andheri West',  pincode: '400053' },
+    { fullName: 'Priya Nair',     phone: '8765432109', email: 'priya@example.com',  city: 'Delhi',     platform: 'Zomato',  vehicleType: 'Scooter',    preferredShift: 'Morning',   avgWeeklyEarnings: 480000, avgDailyHours: 7,  experienceMonths: 18, riskScore: 71, riskTier: 'High',   zone: 'Connaught Place', pincode: '110001' },
+    { fullName: 'Arjun Mehta',    phone: '7654321098', email: 'arjun@example.com',  city: 'Bangalore', platform: 'Both',    vehicleType: 'Motorcycle', preferredShift: 'Mixed',     avgWeeklyEarnings: 590000, avgDailyHours: 9,  experienceMonths: 36, riskScore: 31, riskTier: 'Low',    zone: 'Koramangala',     pincode: '560034' },
+    { fullName: 'Kavya Reddy',    phone: '6543210987', email: 'kavya@example.com',  city: 'Hyderabad', platform: 'Swiggy',  vehicleType: 'Scooter',    preferredShift: 'Evening',   avgWeeklyEarnings: 510000, avgDailyHours: 8,  experienceMonths: 12, riskScore: 58, riskTier: 'Medium', zone: 'Banjara Hills',   pincode: '500034' },
+    { fullName: 'Rohit Das',      phone: '9988776655', email: 'rohit@example.com',  city: 'Kolkata',   platform: 'Zomato',  vehicleType: 'Bicycle',    preferredShift: 'Morning',   avgWeeklyEarnings: 380000, avgDailyHours: 6,  experienceMonths: 6,  riskScore: 44, riskTier: 'Medium', zone: 'Salt Lake',       pincode: '700064' },
+    { fullName: 'Sneha Joshi',    phone: '8877665544', email: 'sneha@example.com',  city: 'Pune',      platform: 'Both',    vehicleType: 'Motorcycle', preferredShift: 'Afternoon', avgWeeklyEarnings: 520000, avgDailyHours: 8,  experienceMonths: 20, riskScore: 39, riskTier: 'Low',    zone: 'Kothrud',         pincode: '411038' },
+    { fullName: 'Vikram Patel',   phone: '7766554433', email: 'vikram@example.com', city: 'Ahmedabad', platform: 'Swiggy',  vehicleType: 'Motorcycle', preferredShift: 'Evening',   avgWeeklyEarnings: 490000, avgDailyHours: 9,  experienceMonths: 30, riskScore: 62, riskTier: 'High',   zone: 'Satellite',       pincode: '380015' },
+    { fullName: 'Meera Singh',    phone: '6655443322', email: 'meera@example.com',  city: 'Jaipur',    platform: 'Zomato',  vehicleType: 'Scooter',    preferredShift: 'Morning',   avgWeeklyEarnings: 460000, avgDailyHours: 7,  experienceMonths: 15, riskScore: 65, riskTier: 'High',   zone: 'Malviya Nagar',   pincode: '302017' },
+    { fullName: 'Aditya Kumar',   phone: '9911223344', email: 'aditya@example.com', city: 'Chennai',   platform: 'Both',    vehicleType: 'Motorcycle', preferredShift: 'Mixed',     avgWeeklyEarnings: 540000, avgDailyHours: 9,  experienceMonths: 28, riskScore: 47, riskTier: 'Medium', zone: 'Anna Nagar',      pincode: '600040' },
+    { fullName: 'Sunita Verma',   phone: '8822334455', email: 'sunita@example.com', city: 'Lucknow',   platform: 'Swiggy',  vehicleType: 'Scooter',    preferredShift: 'Evening',   avgWeeklyEarnings: 420000, avgDailyHours: 7,  experienceMonths: 10, riskScore: 68, riskTier: 'High',   zone: 'Hazratganj',      pincode: '226001' },
   ];
 
+  const cityCoords: Record<string, { lat: number; lng: number }> = {
+    Mumbai: { lat: 19.076, lng: 72.878 }, Delhi: { lat: 28.614, lng: 77.209 },
+    Bangalore: { lat: 12.972, lng: 77.595 }, Hyderabad: { lat: 17.385, lng: 78.487 },
+    Kolkata: { lat: 22.572, lng: 88.363 }, Pune: { lat: 18.520, lng: 73.856 },
+    Ahmedabad: { lat: 23.033, lng: 72.585 }, Jaipur: { lat: 26.912, lng: 75.787 },
+    Chennai: { lat: 13.083, lng: 80.270 }, Lucknow: { lat: 26.847, lng: 80.947 },
+  };
+
   const riders = await RiderModel.insertMany(
-    riderDefs.map(r => ({ ...r, isActive: true, kycVerified: true, registeredAt: daysAgo(Math.floor(30 + Math.random() * 90)) }))
+    riderDefs.map(r => ({
+      fullName:          r.fullName,
+      phone:             r.phone,
+      email:             r.email,
+      city:              r.city,
+      platform:          r.platform,
+      vehicleType:       r.vehicleType,
+      preferredShift:    r.preferredShift,
+      avgWeeklyEarnings: r.avgWeeklyEarnings,
+      avgDailyHours:     r.avgDailyHours,
+      experienceMonths:  r.experienceMonths,
+      riskScore:         r.riskScore,
+      riskTier:          r.riskTier,
+      operatingZone:     r.zone,
+      operatingPincode:  r.pincode,
+      location:          cityCoords[r.city] ?? { lat: 19.076, lng: 72.878 },
+      isActive:          true,
+      kycVerified:       true,
+      registeredAt:      daysAgo(Math.floor(30 + Math.random() * 90)),
+    }))
   );
 
   // ── Seed Policies ────────────────────────────────────────────────────────────

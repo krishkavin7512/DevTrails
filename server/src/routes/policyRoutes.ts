@@ -227,4 +227,45 @@ router.put('/:id/renew', async (req: Request, res: Response) => {
   });
 });
 
+// ── POST /api/policies — alias for /api/policies/create ──────────────────────
+// Flutter calls POST /policies; keep /create for backwards compat
+
+router.post('/', validate(CreatePolicySchema), async (req: Request, res: Response) => {
+  // Forward to the same handler logic by reusing internal function
+  // Re-use the same logic as /create inline
+  const { riderId, planType, autoRenew } = req.body;
+
+  const rider = await Rider.findById(riderId).lean();
+  if (!rider) throw new AppError('Rider not found', 404);
+
+  const existingActive = await Policy.findOne({ riderId, status: 'Active' });
+  if (existingActive) throw new AppError('Rider already has an active policy', 409);
+
+  const breakdown  = calculateWeeklyPremium(rider.city, planType as PlanType, rider.experienceMonths, 0);
+  const planConfig = PLAN_CONFIG[planType as PlanType];
+
+  const startDate = new Date();
+  const endDate   = new Date(startDate.getTime() + 7 * 86_400_000);
+
+  const policy = await Policy.create({
+    riderId,
+    planType,
+    weeklyPremium:       breakdown.finalPremiumPaise,
+    coverageLimit:       planConfig.coverageLimit,
+    coveredDisruptions:  planConfig.disruptions,
+    status:              'PendingPayment',
+    startDate,
+    endDate,
+    autoRenew:           autoRenew ?? true,
+    policyNumber:        policyNumber(),
+    renewalCount:        0,
+  });
+
+  res.status(201).json({
+    success: true,
+    data:    policy,
+    message: `${planType} policy created. Complete payment to activate.`,
+  });
+});
+
 export default router;

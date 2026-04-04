@@ -19,8 +19,8 @@
 
 ![Team](https://img.shields.io/badge/Team-CEIL-10b981?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNS0xMC01LTEwIDV6TTIgMTJsMTAgNSAxMC01LTEwLTUtMTAgNXoiIGZpbGw9IndoaXRlIi8+PC9zdmc+)
 ![Hackathon](https://img.shields.io/badge/Guidewire-DEVTrails_2026-6366f1?style=for-the-badge)
-![Phase](https://img.shields.io/badge/Phase_1-Complete_✅-22c55e?style=for-the-badge)
-![Stack](https://img.shields.io/badge/Stack-Next.js_·_Express_·_Python_ML-0ea5e9?style=for-the-badge)
+![Phase](https://img.shields.io/badge/Phase_2-Complete_✅-22c55e?style=for-the-badge)
+![Stack](https://img.shields.io/badge/Stack-Flutter_·_Express_·_Python_ML-0ea5e9?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-f59e0b?style=for-the-badge)
 
 </div>
@@ -1003,13 +1003,19 @@ Despite being a web app, RainCheck is built **mobile-first**:
 - Offline-capable: mock data fallback renders full UI without internet
 - PWA manifest for "Add to Home Screen" (iOS Safari + Android Chrome)
 
-### Planned Phase 3: Flutter Mobile App
+### Phase 2: Flutter Mobile App *(shipped)*
 
-A native Flutter application is planned for Phase 3 with:
-- Offline-first architecture
-- Push notifications for instant disruption alerts
-- Biometric authentication
-- Background location for GPS-based fraud prevention
+A full native Flutter application built and running on Android:
+
+- Firebase Auth — Google Sign-In + Phone OTP
+- 6-step onboarding with ML-powered risk assessment
+- Real-time dashboard: weather status, minimap, community alerts heatmap
+- Claims management with appeal flow and earnings proof upload
+- Emergency SOS panic button with swipe-to-confirm
+- Community hazard reporting with confirmation + auto-verification
+- Razorpay subscription payments
+- Push notifications, haptic feedback, offline fallback
+- Mid-dark navy glass UI with pastel accents
 
 ---
 
@@ -1064,19 +1070,23 @@ What we shipped:
 
 ---
 
-### Phase 2 — Automation & Payments *(next up)*
+### Phase 2 — Flutter Mobile App *(done)*
 
-Phase 1 proved the concept. Phase 2 makes it real — actual money moving, actual notifications, actual coverage the moment a rider pays.
+Phase 1 proved the concept. Phase 2 ships it to riders' hands — a full native Android app built in Flutter.
 
-What's coming:
+What we shipped:
 
-- Razorpay UPI integration — riders pay weekly premiums and receive payouts to their UPI ID
-- SMS + WhatsApp alerts via Twilio when a trigger fires in the rider's city and when their payout lands
-- WebSocket live feed on the triggers page so the disruption ticker updates without a page refresh
-- Policy auto-renewal — charge the weekly premium automatically, pause if payment fails
-- OTP verification on rider phone number at onboarding
-- Dispute resolution flow for the admin dashboard — insurer can request evidence, rider can respond in-app
-- End-to-end payout latency target: trigger detection to UPI credit under 2 minutes
+- Full Flutter app with Firebase Auth (Google Sign-In + Phone OTP)
+- 6-step onboarding: profile → location → work profile → ML risk assessment → plan selection → Razorpay payment
+- Animated risk meter powered by live ML scoring (Flask on port 8000)
+- Real-time dashboard with OpenWeatherMap integration, community alerts minimap, and heatmap overlay
+- Claims management — list, detail, appeal, earnings proof upload
+- Emergency SOS panic button with pulsating animation and swipe-to-confirm
+- Community hazard reporting with GPS tagging and crowd-confirmation auto-verification
+- Razorpay subscription integration with webhook-driven policy activation
+- Toast notification system, shimmer loaders, haptic feedback throughout
+- Mid-dark navy glass UI — pastel accents, iOS-style card radius, smooth page transitions
+- Backend expanded: alert routes, emergency routes, fraud check, trust score, FCM token management
 
 ---
 
@@ -1089,7 +1099,8 @@ What we're building toward:
 - Enhanced fraud model incorporating GPS trace analysis, cell tower cross-referencing, and delivery platform activity signals (the full anti-spoofing stack from the Market Crash scenario)
 - Backtesting the trigger thresholds against 3 years of Open-Meteo historical data to calibrate basis risk
 - Zomato/Swiggy platform API integration for rider identity and earnings verification
-- Flutter mobile app — push notifications, biometric auth, background location
+- Biometric authentication and background location for the Flutter app
+- Live Twilio WhatsApp alerts when a disruption trigger fires in the rider's city
 - Load testing at 10,000 concurrent claim initiations to validate the fan-out architecture
 - Investor pitch deck and actuarial model for Series A conversation
 - Unit test coverage to 80%+ across backend and ML service
@@ -1105,7 +1116,8 @@ What we're building toward:
 node --version    # v20+ required (v22 LTS recommended)
 npm --version     # v10+
 python --version  # v3.11+ (v3.13 recommended)
-mongod --version  # v7.x recommended (or MongoDB Atlas)
+mongod --version  # v8.x recommended (or MongoDB Atlas)
+flutter --version # v3.41+ (for mobile app)
 ```
 
 ### 1. Clone and Install
@@ -1168,7 +1180,26 @@ mongod --dbpath ./data/db
 curl -X POST http://localhost:5001/api/admin/seed
 ```
 
-### 5. Run the Full Stack
+### 5. Run the Flutter Mobile App
+
+```bash
+cd mobile
+
+# Install Flutter dependencies
+flutter pub get
+
+# Add your google-services.json to mobile/android/app/
+# (Download from Firebase Console → Project Settings → Android app)
+
+# Copy and fill environment variables
+cp .env.example .env
+# Edit mobile/.env — set API_BASE_URL=http://10.0.2.2:5001/api
+
+# Launch on Android emulator (ensure emulator is running first)
+flutter run -d emulator-5554
+```
+
+### 6. Run the Full Stack (Web)
 
 ```bash
 # From project root — starts all 3 services concurrently

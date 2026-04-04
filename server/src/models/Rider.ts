@@ -17,6 +17,15 @@ export interface IRider extends Document {
   riskScore: number;
   isActive: boolean;
   kycVerified: boolean;
+  fcmToken?: string;
+  notificationPrefs?: {
+    pushEnabled: boolean;
+    whatsappEnabled: boolean;
+    triggerAlerts: boolean;
+    claimUpdates: boolean;
+    paymentReminders: boolean;
+    communityAlerts: boolean;
+  };
   registeredAt: Date;
   lastActiveAt: Date;
   location: { lat: number; lng: number };
@@ -53,6 +62,15 @@ const RiderSchema = new Schema<IRider>(
     riskScore: { type: Number, required: true, min: 0, max: 100 },
     isActive: { type: Boolean, default: true },
     kycVerified: { type: Boolean, default: false },
+    fcmToken: { type: String, default: null },
+    notificationPrefs: {
+      pushEnabled:      { type: Boolean, default: true },
+      whatsappEnabled:  { type: Boolean, default: true },
+      triggerAlerts:    { type: Boolean, default: true },
+      claimUpdates:     { type: Boolean, default: true },
+      paymentReminders: { type: Boolean, default: true },
+      communityAlerts:  { type: Boolean, default: true },
+    },
     registeredAt: { type: Date, default: Date.now },
     lastActiveAt: { type: Date, default: Date.now },
     location: {

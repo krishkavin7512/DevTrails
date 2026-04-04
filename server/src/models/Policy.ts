@@ -12,6 +12,7 @@ export interface IPolicy extends Document {
   autoRenew: boolean;
   policyNumber: string;
   renewalCount: number;
+  graceEndsAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,6 +35,7 @@ const PolicySchema = new Schema<IPolicy>(
     autoRenew: { type: Boolean, default: true },
     policyNumber: { type: String, required: true, unique: true },
     renewalCount: { type: Number, default: 0 },
+    graceEndsAt:  { type: Date },
   },
   { timestamps: true }
 );

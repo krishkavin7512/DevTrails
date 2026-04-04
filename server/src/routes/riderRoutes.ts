@@ -33,9 +33,9 @@ const RegisterSchema = z.object({
 
 const UpdateSchema = RegisterSchema.partial().omit({ phone: true });
 
-// ── POST /api/riders/register ─────────────────────────────────────────────────
+// ── POST /api/riders  OR  /api/riders/register ────────────────────────────────
 
-router.post('/register', validate(RegisterSchema), async (req: Request, res: Response) => {
+const registerHandler = async (req: Request, res: Response) => {
   const existing = await Rider.findOne({ phone: req.body.phone });
   if (existing) {
     throw new AppError('A rider with this phone number already exists', 409);
@@ -74,7 +74,10 @@ router.post('/register', validate(RegisterSchema), async (req: Request, res: Res
     data: rider,
     message: 'Rider registered successfully',
   });
-});
+};
+
+router.post('/', validate(RegisterSchema), registerHandler);
+router.post('/register', validate(RegisterSchema), registerHandler);
 
 // ── GET /api/riders/:id ───────────────────────────────────────────────────────
 
@@ -232,6 +235,62 @@ router.post('/:id/risk-assessment', async (req: Request, res: Response) => {
       assessedAt: new Date(),
     },
   });
+});
+
+// ── GET /api/riders/:id/trust ─────────────────────────────────────────────────
+
+router.get('/:id/trust', async (req: Request, res: Response) => {
+  if (!mongoose.isValidObjectId(req.params.id)) throw new AppError('Invalid rider ID', 400);
+
+  const rider = await Rider.findById(req.params.id).lean();
+  if (!rider) throw new AppError('Rider not found', 404);
+
+  const trustScore = Math.max(0, 100 - rider.riskScore);
+  const level =
+    trustScore >= 80 ? 'Excellent' :
+    trustScore >= 60 ? 'Good' :
+    trustScore >= 40 ? 'Fair' : 'Low';
+
+  res.json({
+    success: true,
+    data: {
+      riderId:     rider._id,
+      trustScore,
+      level,
+      riskScore:   rider.riskScore,
+      riskTier:    rider.riskTier,
+      kycVerified: rider.kycVerified,
+    },
+  });
+});
+
+// ── PUT /api/riders/:riderId/fcm-token ────────────────────────────────────────
+
+router.put('/:id/fcm-token', async (req: Request, res: Response) => {
+  if (!mongoose.isValidObjectId(req.params.id)) throw new AppError('Invalid rider ID', 400);
+
+  const { fcmToken } = req.body;
+  if (!fcmToken || typeof fcmToken !== 'string') throw new AppError('fcmToken required', 400);
+
+  await Rider.findByIdAndUpdate(req.params.id, { fcmToken });
+  res.json({ success: true, message: 'FCM token updated' });
+});
+
+// ── PUT /api/riders/:riderId/notification-prefs ───────────────────────────────
+
+router.put('/:id/notification-prefs', async (req: Request, res: Response) => {
+  if (!mongoose.isValidObjectId(req.params.id)) throw new AppError('Invalid rider ID', 400);
+
+  const update: Record<string, any> = {};
+  const allowed = ['pushEnabled', 'whatsappEnabled', 'triggerAlerts', 'claimUpdates', 'paymentReminders', 'communityAlerts'];
+  for (const key of allowed) {
+    if (typeof req.body[key] === 'boolean') {
+      update[`notificationPrefs.${key}`] = req.body[key];
+    }
+  }
+
+  await Rider.findByIdAndUpdate(req.params.id, { $set: update });
+  res.json({ success: true, message: 'Notification preferences updated' });
 });
 
 export default router;

@@ -18,6 +18,67 @@ function validateCity(city: string): string {
   return normalized;
 }
 
+// ── GET /api/weather/current — lat/lng query params (Flutter alias) ───────────
+
+router.get('/current', async (req: Request, res: Response) => {
+  // Flutter passes ?lat=&lng= — derive city from coords or default to Mumbai
+  const lat = parseFloat(req.query.lat as string);
+  const lng = parseFloat(req.query.lng as string);
+
+  // Simple bounding-box city lookup
+  const city = latLngToCity(lat, lng) ?? 'Mumbai';
+  const weather = await getCurrentWeather(city);
+  res.json({ success: true, data: { ...weather, thresholds: {} } });
+});
+
+// ── GET /api/weather/:city — alias for /current/:city (Flutter calls this) ────
+
+router.get('/:city', async (req: Request, res: Response) => {
+  // Avoid matching known sub-routes
+  const reserved = ['current', 'forecast', 'aqi', 'check-triggers', 'history'];
+  const cityParam = String(req.params.city);
+  if (reserved.includes(cityParam)) {
+    throw new AppError('Route not found', 404);
+  }
+  const city    = validateCity(cityParam);
+  const weather = await getCurrentWeather(city);
+  res.json({
+    success: true,
+    data: {
+      ...weather,
+      thresholds: {
+        heavyRain:   `>${TRIGGER_THRESHOLDS.HeavyRain.threshold}mm/hr`,
+        extremeHeat: `>${TRIGGER_THRESHOLDS.ExtremeHeat.threshold}°C feels-like`,
+        severeAQI:   `>${TRIGGER_THRESHOLDS.SevereAQI.threshold} AQI`,
+      },
+    },
+  });
+});
+
+// Helper: rough lat/lng → city
+function latLngToCity(lat: number, lng: number): string | null {
+  if (isNaN(lat) || isNaN(lng)) return null;
+  const cities: Array<{ name: string; lat: number; lng: number }> = [
+    { name: 'Mumbai',    lat: 19.07, lng: 72.87 },
+    { name: 'Delhi',     lat: 28.70, lng: 77.10 },
+    { name: 'Bangalore', lat: 12.97, lng: 77.59 },
+    { name: 'Chennai',   lat: 13.08, lng: 80.27 },
+    { name: 'Hyderabad', lat: 17.38, lng: 78.47 },
+    { name: 'Kolkata',   lat: 22.57, lng: 88.36 },
+    { name: 'Pune',      lat: 18.52, lng: 73.85 },
+    { name: 'Ahmedabad', lat: 23.03, lng: 72.58 },
+    { name: 'Jaipur',    lat: 26.91, lng: 75.79 },
+    { name: 'Lucknow',   lat: 26.85, lng: 80.95 },
+  ];
+  let closest = cities[0];
+  let minDist = Infinity;
+  for (const c of cities) {
+    const d = (c.lat - lat) ** 2 + (c.lng - lng) ** 2;
+    if (d < minDist) { minDist = d; closest = c; }
+  }
+  return closest.name;
+}
+
 // ── GET /api/weather/current/:city ────────────────────────────────────────────
 
 router.get('/current/:city', async (req: Request, res: Response) => {

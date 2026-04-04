@@ -173,7 +173,10 @@ router.post('/initiate', validate(InitiateClaimSchema), async (req: Request, res
     { _id: rider._id, location: rider.location, city: rider.city, experienceMonths: rider.experienceMonths, registeredAt: rider.registeredAt }
   );
 
-  const status = fraud.recommendation === 'flag_fraud' ? 'FraudSuspected' : 'AutoInitiated';
+  const status =
+    fraud.recommendation === 'flag_fraud'   ? 'FraudSuspected' :
+    fraud.recommendation === 'manual_review' ? 'UnderReview'    :
+    'AutoInitiated';
   const total  = await Claim.countDocuments();
 
   const claim = await Claim.create({
@@ -191,6 +194,8 @@ router.post('/initiate', validate(InitiateClaimSchema), async (req: Request, res
     data: { claim, fraudAssessment: fraud },
     message: status === 'FraudSuspected'
       ? 'Claim flagged for fraud review'
+      : status === 'UnderReview'
+      ? 'Claim requires manual review — please upload earnings proof'
       : 'Claim auto-initiated successfully',
   });
 });
@@ -282,6 +287,61 @@ router.put('/:id/reject', validate(RejectSchema), async (req: Request, res: Resp
     success: true,
     data: claim,
     message: `Claim ${claim.claimNumber} rejected. Reason: ${req.body.reason}`,
+  });
+});
+
+// ── PUT /api/claims/:id/submit-proof ─────────────────────────────────────────
+
+router.put('/:id/submit-proof', async (req: Request, res: Response) => {
+  if (!mongoose.isValidObjectId(req.params.id)) throw new AppError('Invalid claim ID', 400);
+
+  const claim = await Claim.findById(req.params.id);
+  if (!claim) throw new AppError('Claim not found', 404);
+  if (claim.status !== 'UnderReview' && claim.status !== 'FraudSuspected') {
+    throw new AppError('Proof can only be submitted for claims under review', 400);
+  }
+
+  const { earnings, platform, period, notes } = req.body;
+  claim.fraudFlags = [
+    ...claim.fraudFlags,
+    `proof_submitted:platform=${platform ?? 'unknown'},period=${period ?? 'unknown'}`,
+    ...(notes ? [`proof_notes:${(notes as string).slice(0, 80)}`] : []),
+  ];
+  await claim.save();
+
+  res.json({
+    success: true,
+    data: { claimId: claim._id, status: claim.status },
+    message: 'Earnings proof submitted. Admin will review your claim.',
+  });
+});
+
+// ── PUT /api/claims/:id/appeal ────────────────────────────────────────────────
+
+router.put('/:id/appeal', async (req: Request, res: Response) => {
+  if (!mongoose.isValidObjectId(req.params.id)) throw new AppError('Invalid claim ID', 400);
+
+  const { reason } = req.body;
+  if (!reason || typeof reason !== 'string' || reason.trim().length < 20) {
+    throw new AppError('Appeal reason must be at least 20 characters', 400);
+  }
+
+  const claim = await Claim.findById(req.params.id);
+  if (!claim) throw new AppError('Claim not found', 404);
+  if (claim.status !== 'Rejected' && claim.status !== 'FraudSuspected') {
+    throw new AppError('Only rejected or fraud-suspected claims can be appealed', 400);
+  }
+
+  claim.status      = 'UnderReview';
+  claim.appealedAt  = new Date();
+  claim.fraudFlags  = [...claim.fraudFlags, `appeal_submitted:${new Date().toISOString()}`];
+  claim.adminNote   = `APPEAL: ${reason.trim()}`;
+  await claim.save();
+
+  res.json({
+    success: true,
+    data: claim,
+    message: 'Appeal submitted. Admin will review within 48 hours.',
   });
 });
 

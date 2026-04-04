@@ -20,8 +20,12 @@ export interface IClaim extends Document {
   status: 'AutoInitiated' | 'UnderReview' | 'Approved' | 'Paid' | 'Rejected' | 'FraudSuspected';
   fraudScore: number;
   fraudFlags: string[];
+  deviceFingerprint?: { hash: string; clientId: string };
+  adminNote?: string;
+  reviewedAt?: Date;
   processedAt?: Date;
   paidAt?: Date;
+  appealedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -57,8 +61,15 @@ const ClaimSchema = new Schema<IClaim>(
     },
     fraudScore: { type: Number, default: 0, min: 0, max: 100 },
     fraudFlags: [{ type: String }],
+    deviceFingerprint: {
+      hash:     { type: String },
+      clientId: { type: String },
+    },
+    adminNote:   { type: String },
+    reviewedAt:  { type: Date },
     processedAt: { type: Date },
-    paidAt: { type: Date },
+    paidAt:      { type: Date },
+    appealedAt:  { type: Date },
   },
   { timestamps: true }
 );
@@ -66,5 +77,6 @@ const ClaimSchema = new Schema<IClaim>(
 ClaimSchema.index({ riderId: 1, status: 1 });
 ClaimSchema.index({ policyId: 1 });
 ClaimSchema.index({ triggerType: 1, createdAt: -1 });
+ClaimSchema.index({ 'deviceFingerprint.hash': 1, riderId: 1 });
 
 export default mongoose.model<IClaim>('Claim', ClaimSchema);

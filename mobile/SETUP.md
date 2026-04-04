@@ -120,6 +120,10 @@ You need Firebase for push notifications (FCM) and optional auth.
 2. Create a new project (or use existing) → name it `raincheck`
 3. APIs & Services → Enable APIs → search "Maps SDK for Android" → Enable
 4. APIs & Services → Credentials → Create Credentials → API Key
+Get Started on Google Maps Platform
+You're all set to develop! Here's the API key you would need for your implementation. API key can be referenced in the Credentials section.
+
+AIzaSyAbzqfNCayTSg2yIDrm0pqrpLpyYFotgGc
 5. Copy the key (looks like `AIzaSy...`)
 6. Restrict it: Application restrictions → Android apps → Add your package name `com.raincheck.mobile`
 
@@ -133,6 +137,9 @@ You need Firebase for push notifications (FCM) and optional auth.
 4. You'll get:
    - Key ID: `rzp_test_xxxxxxxxxxxx`
    - Key Secret: (shown once — copy it)
+
+   rzp_test_SXpIJBuIYNtMNF
+   er7rGhgDgm7NfjJwGo6oByIb
 
 ---
 
